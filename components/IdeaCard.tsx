@@ -49,22 +49,38 @@ export default function IdeaCard({ idea }: IdeaCardProps) {
         pixelRatio: 2
       });
 
-      // Convert data URL to blob for Web Share API
-      const response = await fetch(dataUrl);
-      const blob = await response.blob();
-      const file = new File([blob], `startup-bro-${idea.ideaName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}.png`, { type: 'image/png' });
-
       const shareText = `🤯 Just generated this absolutely unhinged startup idea!\n\n"${idea.ideaName}"\n\nTry Startup Bro for maximum brainrot! 🚀 on https://startup-bro-app.vercel.app/\n\nMade by the funniest people on the internet. @CookedDev, @Sukhvir_Kooner, @advolt #StartupBro #Brainrot #StartupIdeas`;
 
-      // Try Web Share API first (supports images on mobile)
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          title: 'Startup Bro - Unhinged Startup Idea',
-          text: shareText,
-          files: [file]
+      // Convert to blob for upload
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      
+      // Upload to imgur for public sharing
+      const formData = new FormData();
+      formData.append('image', blob);
+
+      try {
+        const imgurResponse = await fetch('https://api.imgur.com/3/image', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Client-ID 546c25a59c58ad7', // Public imgur client ID
+          },
+          body: formData
         });
-      } else {
-        // Fallback: Open Twitter with text and download image
+
+        const imgurData = await imgurResponse.json();
+        
+        if (imgurData.success && imgurData.data.link) {
+          // Open Twitter with both text and image URL
+          const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(imgurData.data.link)}`;
+          window.open(twitterUrl, '_blank');
+        } else {
+          throw new Error('Failed to upload image');
+        }
+      } catch (imgurError) {
+        console.log('Imgur upload failed, using fallback method');
+        
+        // Fallback: Open Twitter with text only and download image
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
         window.open(twitterUrl, '_blank');
         
