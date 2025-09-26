@@ -43,7 +43,7 @@ export default function IdeaCard({ idea }: IdeaCardProps) {
     if (!cardRef.current) return;
 
     try {
-      const dataUrl = await htmlToImage.toPng(cardRef.current, { quality: 0.95, backgroundColor: '#0f172a' });
+      await htmlToImage.toPng(cardRef.current, { quality: 0.95, backgroundColor: '#0f172a' });
 
       const shareText = `🤯 Just generated this absolutely unhinged startup idea!\n\n"${idea.ideaName}"\n\nTry Startup Bro for maximum brainrot! 🚀\n\n#StartupBro #Brainrot #StartupIdeas`;
       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
@@ -77,7 +77,7 @@ export default function IdeaCard({ idea }: IdeaCardProps) {
           <div className='bg-red-900/20 border border-red-500/30 rounded-xl p-4'>
             <div className='flex items-center gap-2 mb-3'>
               <AlertCircle className='h-5 w-5 text-red-400' />
-              <h3 className='font-bold text-lg text-red-300'>The Problem 🤔</h3>
+              <h3 className='font-bold text-lg text-red-300'>The Problem </h3>
             </div>
             <p className='text-slate-200 leading-relaxed text-lg'>{idea.problemStatement}</p>
           </div>
@@ -86,7 +86,7 @@ export default function IdeaCard({ idea }: IdeaCardProps) {
           <div className='bg-green-900/20 border border-green-500/30 rounded-xl p-4'>
             <div className='flex items-center gap-2 mb-3'>
               <Lightbulb className='h-5 w-5 text-green-400' />
-              <h3 className='font-bold text-lg text-green-300'>Our Revolutionary Solution 💡</h3>
+              <h3 className='font-bold text-lg text-green-300'>Our Revolutionary Solution </h3>
             </div>
             <p className='text-slate-200 leading-relaxed text-lg'>{idea.solution}</p>
           </div>

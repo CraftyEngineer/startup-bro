@@ -17,9 +17,9 @@ export default function HomePage() {
     try {
       const generatedIdea = await generateIdea(word1, word2, word3);
       setIdea(generatedIdea);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error generating idea:', error);
-      toast.error(error.message || 'An unknown error occurred.');
+      toast.error(error instanceof Error ? error.message : 'An unknown error occurred.');
     } finally {
       setIsLoading(false);
     }
