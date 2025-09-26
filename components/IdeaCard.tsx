@@ -45,7 +45,7 @@ export default function IdeaCard({ idea }: IdeaCardProps) {
     try {
       await htmlToImage.toPng(cardRef.current, { quality: 0.95, backgroundColor: '#0f172a' });
 
-      const shareText = `🤯 Just generated this absolutely unhinged startup idea!\n\n"${idea.ideaName}"\n\nTry Startup Bro for maximum brainrot! 🚀\n\n#StartupBro #Brainrot #StartupIdeas`;
+      const shareText = `🤯 Just generated this absolutely unhinged startup idea!\n\n"${idea.ideaName}"\n\nTry Startup Bro for maximum brainrot! 🚀 on https://startup-bro-app.vercel.app/\n\nMade by the funniest people on the internet. @CookedDev, @Sukhvir_Kooner, @advolt #StartupBro #Brainrot #StartupIdeas`;
       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
       window.open(twitterUrl, '_blank');
       
