@@ -43,11 +43,39 @@ export default function IdeaCard({ idea }: IdeaCardProps) {
     if (!cardRef.current) return;
 
     try {
-      await htmlToImage.toPng(cardRef.current, { quality: 0.95, backgroundColor: '#0f172a' });
+      const dataUrl = await htmlToImage.toPng(cardRef.current, { 
+        quality: 0.95, 
+        backgroundColor: '#0f172a',
+        pixelRatio: 2
+      });
+
+      // Convert data URL to blob for Web Share API
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], `startup-bro-${idea.ideaName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}.png`, { type: 'image/png' });
 
       const shareText = `🤯 Just generated this absolutely unhinged startup idea!\n\n"${idea.ideaName}"\n\nTry Startup Bro for maximum brainrot! 🚀 on https://startup-bro-app.vercel.app/\n\nMade by the funniest people on the internet. @CookedDev, @Sukhvir_Kooner, @advolt #StartupBro #Brainrot #StartupIdeas`;
-      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-      window.open(twitterUrl, '_blank');
+
+      // Try Web Share API first (supports images on mobile)
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: 'Startup Bro - Unhinged Startup Idea',
+          text: shareText,
+          files: [file]
+        });
+      } else {
+        // Fallback: Open Twitter with text and download image
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+        window.open(twitterUrl, '_blank');
+        
+        // Download the image so user can manually attach it
+        const link = document.createElement('a');
+        link.download = `startup-bro-${idea.ideaName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}.png`;
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
       
     } catch (error) {
       console.error('Error sharing:', error);
