@@ -49,7 +49,7 @@ export default function IdeaCard({ idea }: IdeaCardProps) {
         pixelRatio: 2
       });
 
-      const shareText = `🤯 Just generated this absolutely unhinged startup idea!\n\n"${idea.ideaName}"\n\nTry Startup Bro for maximum brainrot! 🚀 on https://startup-bro-app.vercel.app/\n\nMade by the funniest people on the internet. @CookedDev, @Sukhvir_Kooner, @advolt #StartupBro #Brainrot #StartupIdeas`;
+      const shareText = `🤯 Just generated this absolutely unhinged startup idea!\n\n"${idea.ideaName}"\n\nTry Startup Bro for maximum brainrot! 🚀 on https://startup-bro-app.vercel.app/\n\nMade by the funniest people on the internet. @CookedDev, @Sukhvir_Kooner, @advolt #StartupBro`;
 
       // Convert to blob for upload
       const response = await fetch(dataUrl);
